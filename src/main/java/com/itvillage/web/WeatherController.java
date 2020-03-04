@@ -3,6 +3,8 @@ package com.itvillage.web;
 import com.itvillage.domain.WeatherData;
 import com.itvillage.sensor.HumiditySensor;
 import com.itvillage.sensor.TemperatureSensor;
+import com.itvillage.utils.LogType;
+import com.itvillage.utils.Logger;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.function.Consumer;
 
 /**
  * 클라이언트의 기상 데이터 요청을 처리하는 Rest API 컨트롤러
@@ -46,21 +49,22 @@ public class WeatherController {
         ).subscribe(
                 weatherData -> {
                     emitter.send(weatherData);
-                    System.out.println(weatherData.getTemperature().getValue() + ", " + weatherData.getHumidity().getValue());
+                    Logger.log(LogType.ON_NEXT,
+                            weatherData.getTemperature().getValue() + ", " + weatherData.getHumidity().getValue());
                 },
-                error -> System.out.println(error.getMessage())
+                error -> Logger.log(LogType.ON_ERROR, error.getMessage())
         );
 
-        // TODO 공통화 리팩토링 필요
-        emitter.onCompletion(() -> {
+        this.dispose(emitter, () -> {
             if(!disposable.isDisposed())
                 disposable.dispose();
         });
-        emitter.onTimeout(() -> {
-            if(!disposable.isDisposed())
-                disposable.dispose();
-        });
-
         return emitter;
+    }
+
+    // TODO emitter 처리는 CustomEmitter를 만들어서 거기서 처리 하게 리팩토링 필요
+    private void dispose(SseEmitter emitter, Runnable runnable){
+        emitter.onCompletion(runnable);
+        emitter.onTimeout(runnable);
     }
 }
