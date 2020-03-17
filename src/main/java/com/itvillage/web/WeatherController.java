@@ -58,7 +58,6 @@ public class WeatherController {
         return emitter;
     }
 
-    // TODO emitter 처리는 CustomEmitter를 만들어서 거기서 처리 하게 리팩토링 필요
     private void dispose(SseEmitter emitter, Runnable runnable){
         emitter.onCompletion(runnable);
         emitter.onTimeout(runnable);
