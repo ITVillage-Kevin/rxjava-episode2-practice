@@ -2,13 +2,14 @@ HELP.md
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
+gradle/gradle-wrapper.properties
 !**/src/main/**
 !**/src/test/**
 
 ### STS ###
 .apt_generated
 .classpath
-.factorypath
+.factorypathgit st
 .project
 .settings
 .springBeans

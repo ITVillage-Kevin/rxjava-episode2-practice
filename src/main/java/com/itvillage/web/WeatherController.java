@@ -8,9 +8,7 @@ import com.itvillage.utils.Logger;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,10 +33,8 @@ public class WeatherController {
     }
 
     // Server Sent Event를 이용한 HTTP Streaming 연결
-    @RequestMapping(
-            value = "/stream/weather",
-            method = RequestMethod.GET
-    )
+    @CrossOrigin("http://localhost:63342")
+    @GetMapping("/stream/weather")
     public SseEmitter connectWeatherEvents(HttpServletRequest request) {
         SseEmitter emitter = new SseEmitter(SSE_SESSION_TIMEOUT);
 
