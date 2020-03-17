@@ -9,7 +9,8 @@ gradle/gradle-wrapper.properties
 ### STS ###
 .apt_generated
 .classpath
-.factorypathgit st
+.factorypathgit st:q!
+
 .project
 .settings
 .springBeans
