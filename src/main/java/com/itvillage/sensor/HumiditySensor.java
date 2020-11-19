@@ -1,12 +1,11 @@
 package com.itvillage.sensor;
 
-import com.itvillage.domain.Humidity;
+import com.itvillage.utils.LogType;
+import com.itvillage.utils.Logger;
 import com.itvillage.utils.NumberUtil;
 import com.itvillage.utils.TimeUtil;
 import io.reactivex.Observable;
 import org.springframework.stereotype.Component;
-
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,22 +15,17 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class HumiditySensor {
-    private final Random random = new Random();
-
     // 습도 데이터를 통지하는 스트림을 생성한다.
-    public Observable<Humidity> getHumidityStream(){
+    public Observable<Integer> getHumidityStream(){
         return Observable.interval(0L, TimeUnit.MILLISECONDS)
                     .delay(item -> {
                         TimeUtil.sleep(NumberUtil.randomRange(1000, 3000));
                         return Observable.just(item);
                     })
-                    .map(notUse -> this.getHumidity())
-                    .publish() // 구독자들에게 통지되는 데이터를 브로드 캐스팅한다.
-                    .refCount(); // 구독자가 있는 경우에만 데이터를 통지한다.
+                    .map(notUse -> this.getHumidity());
     }
 
-    private Humidity getHumidity() {
-
-        return new Humidity(NumberUtil.randomRange(30, 70));
+    private int getHumidity() {
+        return NumberUtil.randomRange(30, 70);
     }
 }

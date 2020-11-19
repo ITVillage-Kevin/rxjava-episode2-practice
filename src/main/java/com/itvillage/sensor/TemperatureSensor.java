@@ -1,12 +1,10 @@
 package com.itvillage.sensor;
 
-import com.itvillage.domain.Temperature;
 import com.itvillage.utils.NumberUtil;
 import com.itvillage.utils.TimeUtil;
 import io.reactivex.Observable;
 import org.springframework.stereotype.Component;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -18,18 +16,16 @@ import java.util.concurrent.TimeUnit;
 public class TemperatureSensor {
 
     // 온도 데이터를 통지하는 스트림을 생성한다.
-    public Observable<Temperature> getTemperatureStream(){
+    public Observable<Integer> getTemperatureStream(){
         return Observable.interval(0L, TimeUnit.MILLISECONDS)
                 .delay(item -> {
                     TimeUtil.sleep(NumberUtil.randomRange(1000, 3000));
                     return Observable.just(item);
                 })
-                .map(notUse -> this.getTemperature())
-                .publish() // 구독자들에게 통지되는 데이터를 브로드 캐스팅한다.
-                .refCount(); // 구독자가 있는 경우에만 데이터를 통지한다.
+                .map(notUse -> this.getTemperature());
     }
 
-    private Temperature getTemperature() {
-        return new Temperature(NumberUtil.randomRange(-10, 30));
+    private int getTemperature() {
+        return NumberUtil.randomRange(-10, 30);
     }
 }
